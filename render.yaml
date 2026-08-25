@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: syllabus-slayer-api
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: syllabus_slayer
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: CHAT_MODEL
+        value: gemini-flash-latest
+      - key: EMBED_MODEL
+        value: all-MiniLM-L6-v2
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: MAX_FILE_SIZE_MB
+        value: "20"
+      - key: MAX_EXTRACTED_CHARS
+        value: "50000"
