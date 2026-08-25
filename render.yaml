@@ -17,7 +17,7 @@ services:
       - key: GOOGLE_API_KEY
         sync: false
       - key: CHAT_MODEL
-        value: gemini-2.0-flash
+        value: gemini-2.5-flash
       - key: EMBED_MODEL
         value: all-MiniLM-L6-v2
       - key: UPLOAD_DIR
