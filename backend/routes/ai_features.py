@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY", ""))
 _raw_model = os.getenv("CHAT_MODEL", "gemini-2.0-flash").strip()
-if _raw_model in ["gemini-flash-latest", "gemini-2.5-flash"]:
+if not _raw_model or _raw_model in ["gemini-1.5-flash", "gemini-flash-latest", "gemini-2.5-flash"]:
     CHAT_MODEL = "gemini-2.0-flash"
 else:
     CHAT_MODEL = _raw_model
@@ -39,8 +39,6 @@ else:
 DEFAULT_CANDIDATE_MODELS = [
     "gemini-2.0-flash",
     "gemini-2.0-flash-exp",
-    "gemini-1.5-flash-latest",
-    "gemini-1.5-flash",
     "gemini-1.5-pro",
     "gemini-pro",
 ]
@@ -334,14 +332,10 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
                     stream=True
                 )
                 async for chunk in res:
-                    try:
-                        if chunk.text:
-                            payload = json.dumps({"token": chunk.text})
-                            yield f"data: {payload}\n\n"
-                            response_started = True
-                    except Exception as chunk_err:
-                        logger.warning("Chunk extraction error on model %s: %s", m_name, chunk_err)
-                        continue
+                    if chunk.text:
+                        payload = json.dumps({"token": chunk.text})
+                        yield f"data: {payload}\n\n"
+                        response_started = True
 
                 if response_started:
                     break
