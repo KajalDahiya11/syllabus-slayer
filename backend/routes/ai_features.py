@@ -30,8 +30,9 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY", ""))
-_raw_model = os.getenv("CHAT_MODEL", "gemini-1.5-flash")
-CHAT_MODEL = "gemini-1.5-flash" if ("latest" in _raw_model or not _raw_model.startswith("gemini")) else _raw_model
+_raw_model = os.getenv("CHAT_MODEL", "gemini-2.0-flash")
+CHAT_MODEL = "gemini-2.0-flash" if ("latest" in _raw_model or _raw_model == "gemini-1.5-flash") else _raw_model
+
 
 
 
