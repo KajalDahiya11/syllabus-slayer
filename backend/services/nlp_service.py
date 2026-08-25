@@ -20,13 +20,14 @@ logger = logging.getLogger(__name__)
 
 try:
     import spacy
-    _nlp = spacy.load("en_core_web_sm")
+    _nlp = spacy.load("en_core_web_sm", disable=["parser", "attribute_ruler", "lemmatizer"])
     _SPACY = True
-    logger.info("spaCy loaded (en_core_web_sm)")
+    logger.info("spaCy loaded (lightweight mode)")
 except Exception:
     _SPACY = False
     _nlp = None
     logger.warning("spaCy not available — using keyword fallback")
+
 
 try:
     from transformers import pipeline, Pipeline

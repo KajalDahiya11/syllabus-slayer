@@ -260,10 +260,19 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
             difficulty=request.difficulty,
         )
 
-        gemini_messages = []
-        for m in request.messages[-20:]:
-            role = "model" if m.role == "assistant" else "user"
-            gemini_messages.append({"role": role, "parts": [m.content]})
+        if len(request.messages) == 1:
+            contents = request.messages[0].content
+        else:
+            contents = []
+            last_role = None
+            for m in request.messages[-10:]:
+                role = "model" if m.role == "assistant" else "user"
+                if role == last_role:
+                    continue
+                contents.append({"role": role, "parts": [m.content]})
+                last_role = role
+            if not contents:
+                contents = last_user_msg or "Hello"
 
         model = genai.GenerativeModel(
             model_name=CHAT_MODEL,
@@ -271,13 +280,14 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
         )
 
         response = await model.generate_content_async(
-            gemini_messages,
+            contents,
             generation_config=genai.GenerationConfig(
-                max_output_tokens=2048,  # Increased for full explanations
+                max_output_tokens=1024,
                 temperature=0.7,
             ),
             stream=True
         )
+
         async for chunk in response:
             try:
                 if chunk.text:
