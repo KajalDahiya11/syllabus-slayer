@@ -30,8 +30,21 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY", ""))
-_raw_model = os.getenv("CHAT_MODEL", "gemini-2.0-flash")
-CHAT_MODEL = "gemini-2.0-flash" if ("latest" in _raw_model or _raw_model == "gemini-1.5-flash") else _raw_model
+_raw_model = os.getenv("CHAT_MODEL", "gemini-2.0-flash").strip()
+if _raw_model in ["gemini-flash-latest", "gemini-2.5-flash"]:
+    CHAT_MODEL = "gemini-2.0-flash"
+else:
+    CHAT_MODEL = _raw_model
+
+DEFAULT_CANDIDATE_MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-exp",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+    "gemini-pro",
+]
+
 
 
 
@@ -118,7 +131,7 @@ async def summarize_route(
     else:
         try:
             summary = ""
-            for m_name in ["gemini-pro", "gemini-1.5-pro", "gemini-2.0-flash-exp", "gemini-1.5-flash"]:
+            for m_name in [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]:
                 try:
                     model = genai.GenerativeModel(m_name)
                     prompt = (
@@ -132,7 +145,8 @@ async def summarize_route(
                     summary = resp.text.strip()
                     if summary:
                         break
-                except Exception:
+                except Exception as ex:
+                    logger.warning("Gemini summarize model %s failed: %s", m_name, ex)
                     continue
             if not summary:
                 summary = summarise_text(text)
@@ -199,15 +213,32 @@ Ensure the response is purely the JSON array and NOTHING else. No markdown block
         if not os.getenv("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY") == "YOUR_GEMINI_API_KEY_HERE":
             questions = generate_quiz(text, topic_name, num_questions)
         else:
-            model = genai.GenerativeModel(
-                model_name=CHAT_MODEL,
-                system_instruction=system_prompt,
-                generation_config=genai.GenerationConfig(
-                    response_mime_type="application/json",
-                    temperature=0.2,
-                )
-            )
-            resp = await model.generate_content_async(prompt)
+            candidate_models = [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]
+            resp = None
+            last_err = None
+            for m_name in candidate_models:
+                try:
+                    model = genai.GenerativeModel(
+                        model_name=m_name,
+                        system_instruction=system_prompt,
+                        generation_config=genai.GenerationConfig(
+                            response_mime_type="application/json",
+                            temperature=0.2,
+                        )
+                    )
+                    resp = await model.generate_content_async(prompt)
+                    if resp and resp.text:
+                        break
+                except Exception as ex:
+                    last_err = ex
+                    logger.warning("Gemini quiz model %s failed, trying fallback: %s", m_name, ex)
+                    continue
+
+            if not resp or not resp.text:
+                if last_err:
+                    raise last_err
+                raise RuntimeError("Quiz generation failed across all candidate models.")
+
             raw_text = resp.text.strip()
             # Clean possible markdown formatting
             if raw_text.startswith("```json"):
@@ -288,10 +319,8 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
         else:
             final_prompt = [{"role": "user", "parts": [system_prompt]}] + contents
 
-        response = None
-        candidate_models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
-        if CHAT_MODEL not in candidate_models:
-            candidate_models.insert(0, CHAT_MODEL)
+        response_started = False
+        candidate_models = [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]
 
         for m_name in candidate_models:
             try:
@@ -309,15 +338,20 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
                         if chunk.text:
                             payload = json.dumps({"token": chunk.text})
                             yield f"data: {payload}\n\n"
-                    except Exception:
+                            response_started = True
+                    except Exception as chunk_err:
+                        logger.warning("Chunk extraction error on model %s: %s", m_name, chunk_err)
                         continue
-                response = True
-                break
+
+                if response_started:
+                    break
             except Exception as ex:
                 logger.warning("Gemini model %s failed, trying fallback: %s", m_name, ex)
+                if response_started:
+                    break
                 continue
 
-        if not response:
+        if not response_started:
             raise RuntimeError("Could not connect to Gemini AI models. Please check your GOOGLE_API_KEY.")
 
 
