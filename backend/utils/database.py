@@ -4,6 +4,7 @@ StudySage — Async MongoDB connection via Motor
 import logging
 import os
 
+import certifi
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,13 @@ async def connect_db() -> None:
     global _client, _db
     uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
     db_name = os.getenv("MONGODB_DB", "studysage")
-    _client = AsyncIOMotorClient(uri, serverSelectionTimeoutMS=5000)
+
+    kwargs: dict = {"serverSelectionTimeoutMS": 10000}
+    if "mongodb+srv" in uri or "ssl=true" in uri.lower() or "tls=true" in uri.lower():
+        kwargs["tlsCAFile"] = certifi.where()
+
+    _client = AsyncIOMotorClient(uri, **kwargs)
+
     # Verify connection
     await _client.admin.command("ping")
     _db = _client[db_name]
