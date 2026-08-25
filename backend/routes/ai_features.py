@@ -281,30 +281,28 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
                     continue
                 contents.append({"role": role, "parts": [m.content]})
                 last_role = role
-            if not contents:
-                contents = last_user_msg or "Hello"
+        # Combine system prompt into prompt to support all Gemini models (including gemini-pro and flash versions)
+        if isinstance(contents, str):
+            final_prompt = f"{system_prompt}\n\nUser Question: {contents}"
+        else:
+            final_prompt = [{"role": "user", "parts": [system_prompt]}] + contents
 
         response = None
-        candidate_models = ["gemini-pro", "gemini-1.5-pro", "gemini-2.0-flash-exp", "gemini-1.5-flash-latest", "gemini-1.5-flash"]
+        candidate_models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
         if CHAT_MODEL not in candidate_models:
             candidate_models.insert(0, CHAT_MODEL)
 
-
         for m_name in candidate_models:
             try:
-                model = genai.GenerativeModel(
-                    model_name=m_name,
-                    system_instruction=system_prompt,
-                )
+                model = genai.GenerativeModel(model_name=m_name)
                 res = await model.generate_content_async(
-                    contents,
+                    final_prompt,
                     generation_config=genai.GenerationConfig(
                         max_output_tokens=1024,
                         temperature=0.7,
                     ),
                     stream=True
                 )
-                # Test reading the first chunk to ensure model works
                 async for chunk in res:
                     try:
                         if chunk.text:
@@ -315,15 +313,12 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
                 response = True
                 break
             except Exception as ex:
-                err_str = str(ex).lower()
-                if "404" in err_str or "not found" in err_str or "not supported" in err_str:
-                    logger.warning("Gemini model %s 404 fallback: %s", m_name, ex)
-                    continue
-                else:
-                    raise ex
+                logger.warning("Gemini model %s failed, trying fallback: %s", m_name, ex)
+                continue
 
         if not response:
-            raise RuntimeError("No compatible Gemini model found for this API key.")
+            raise RuntimeError("Could not connect to Gemini AI models. Please check your GOOGLE_API_KEY.")
+
 
         yield "data: [DONE]\n\n"
 
