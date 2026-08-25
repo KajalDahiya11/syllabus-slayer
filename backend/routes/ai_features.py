@@ -116,19 +116,29 @@ async def summarize_route(
         summary = summarise_text(text)
     else:
         try:
-            model = genai.GenerativeModel(CHAT_MODEL)
-            prompt = (
-                f"Explain the topic '{topic}' in very simple, easy-to-understand language. "
-                f"Imagine you are explaining it to a student who is new to this concepts. "
-                f"Use a friendly tone, clear analogies, and avoid overly technical jargon unless you explain it first. "
-                f"Base your explanation ONLY on the following text content.\n\n"
-                f"Content:\n{text[:10000]}"
-            )
-            resp = await model.generate_content_async(prompt)
-            summary = resp.text.strip()
+            summary = ""
+            for m_name in ["gemini-pro", "gemini-1.5-pro", "gemini-2.0-flash-exp", "gemini-1.5-flash"]:
+                try:
+                    model = genai.GenerativeModel(m_name)
+                    prompt = (
+                        f"Explain the topic '{topic}' in very simple, easy-to-understand language. "
+                        f"Imagine you are explaining it to a student who is new to this concepts. "
+                        f"Use a friendly tone, clear analogies, and avoid overly technical jargon unless you explain it first. "
+                        f"Base your explanation ONLY on the following text content.\n\n"
+                        f"Content:\n{text[:10000]}"
+                    )
+                    resp = await model.generate_content_async(prompt)
+                    summary = resp.text.strip()
+                    if summary:
+                        break
+                except Exception:
+                    continue
+            if not summary:
+                summary = summarise_text(text)
         except Exception as e:
             logger.error("Gemini Summarization failed: %s", e)
             summary = summarise_text(text)
+
 
     return {"summary": summary}
 
@@ -275,9 +285,10 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
                 contents = last_user_msg or "Hello"
 
         response = None
-        candidate_models = [CHAT_MODEL, "gemini-1.5-flash-latest", "gemini-2.0-flash-exp", "gemini-pro", "gemini-1.5-flash"]
-        # De-duplicate while preserving order
-        candidate_models = list(dict.fromkeys(candidate_models))
+        candidate_models = ["gemini-pro", "gemini-1.5-pro", "gemini-2.0-flash-exp", "gemini-1.5-flash-latest", "gemini-1.5-flash"]
+        if CHAT_MODEL not in candidate_models:
+            candidate_models.insert(0, CHAT_MODEL)
+
 
         for m_name in candidate_models:
             try:
