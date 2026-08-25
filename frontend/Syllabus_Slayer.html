@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Syllabus Slayer AI Learning Platform</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+  <style>
+    :root,
+    [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2rem);
+      --space-1: .25rem;
+      --space-2: .5rem;
+      --space-3: .75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --color-bg: #f7f6f2;
+      --color-surface: #f9f8f5;
+      --color-surface-2: #fbfbf9;
+      --color-surface-offset: #edeae5;
+      --color-border: #d4d1ca;
+      --color-divider: #dcd9d5;
+      --color-text: #28251d;
+      --color-text-muted: #6f6d68;
+      --color-text-faint: #aaa8a2;
+      --color-primary: #01696f;
+      --color-primary-hover: #0c4e54;
+      --color-primary-highlight: #dce9e7;
+      --color-blue: #006494;
+      --color-success: #437a22;
+      --color-warning: #964219;
+      --color-error: #a12c7b;
+      --radius-sm: .375rem;
+      --radius-md: .625rem;
+      --radius-lg: .9rem;
+      --radius-xl: 1.2rem;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgba(40, 37, 29, .06);
+      --shadow-md: 0 8px 24px rgba(40, 37, 29, .08);
+      --shadow-lg: 0 18px 42px rgba(40, 37, 29, .12);
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #171614;
+      --color-surface: #1c1b19;
+      --color-surface-2: #201f1d;
+      --color-surface-offset: #22211f;
+      --color-border: #393836;
+      --color-divider: #262523;
+      --color-text: #e2dfda;
+      --color-text-muted: #aaa8a3;
+      --color-text-faint: #6b6965;
+      --color-primary: #4f98a3;
+      --color-primary-hover: #227f8b;
+      --color-primary-highlight: #243638;
+      --color-blue: #5591c7;
+      --color-success: #6daa45;
+      --color-warning: #bb653b;
+      --color-error: #d163a7;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, .22);
+      --shadow-md: 0 10px 26px rgba(0, 0, 0, .3);
+      --shadow-lg: 0 18px 42px rgba(0, 0, 0, .4);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    body {
+      min-height: 100dvh;
+      font-family: 'Satoshi', Inter, sans-serif;
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm)
+    }
+
+    /* Layout */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      grid-template-rows: 72px 1fr;
+      height: 100dvh
+    }
+
+    .sidebar {
+      grid-row: 1/-1;
+      background: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      overflow-y: auto
+    }
+
+    .header {
+      grid-column: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-6);
+      background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 10
+    }
+
+    .main {
+      grid-column: 2;
+      overflow-y: auto;
+      padding: var(--space-6)
+    }
+
+    /* Brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3)
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--color-primary-highlight);
+      display: grid;
+      place-items: center;
+      color: var(--color-primary)
+    }
+
+    .logo svg {
+      width: 24px;
+      height: 24px
+    }
+
+    .brand h1 {
+      font-size: var(--text-lg);
+      line-height: 1.1
+    }
+
+    /* Utilities */
+    .muted {
+      color: var(--color-text-muted)
+    }
+
+    .faint {
+      color: var(--color-text-faint)
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: .4rem .7rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-weight: 700
+    }
+
+    /* Nav */
+    .nav {
+      display: grid;
+      gap: var(--space-2)
+    }
+
+    .nav button {
+      text-align: left;
+      padding: .9rem 1rem;
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      transition: all var(--transition)
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      box-shadow: var(--shadow-sm)
+    }
+
+    /* Cards */
+    .sidebar-card,
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm)
+    }
+
+    .sidebar-card {
+      padding: var(--space-4)
+    }
+
+    .card {
+      padding: var(--space-5)
+    }
+
+    .card h3 {
+      font-size: var(--text-lg);
+      line-height: 1.15;
+      margin-bottom: var(--space-2)
+    }
+
+    /* Buttons */
+    .primary-btn {
+      padding: .9rem 1.1rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: var(--radius-lg);
+      font-weight: 700;
+      transition: all var(--transition)
+    }
+
+    .primary-btn:hover {
+      background: var(--color-primary-hover)
+    }
+
+    .primary-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed
+    }
+
+    .ghost-btn,
+    .small-btn,
+    .theme-toggle {
+      padding: .75rem .95rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      transition: all var(--transition)
+    }
+
+    .ghost-btn:hover,
+    .small-btn:hover,
+    .theme-toggle:hover {
+      background: var(--color-surface-2)
+    }
+
+    /* Header */
+    .searchbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      padding: .85rem 1rem;
+      border-radius: var(--radius-full);
+      min-width: min(100%, 380px)
+    }
+
+    .searchbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3)
+    }
+
+    /* Grids */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr .95fr;
+      gap: var(--space-6);
+      margin-bottom: var(--space-6)
+    }
+
+    .hero-card {
+      padding: var(--space-6);
+      background: linear-gradient(135deg, var(--color-surface), var(--color-surface-2));
+      overflow: hidden
+    }
+
+    .hero h2 {
+      font-size: var(--text-xl);
+      line-height: 1.08;
+      max-width: 16ch;
+      margin: var(--space-3) 0
+    }
+
+    .hero p {
+      max-width: 60ch;
+      color: var(--color-text-muted)
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-6)
+    }
+
+    .stat {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border)
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      font-variant-numeric: tabular-nums lining-nums
+    }
+
+    .panel-stack {
+      display: grid;
+      gap: var(--space-4)
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6)
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6)
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4)
+    }
+
+    /* Upload */
+    .upload-zone {
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      background: repeating-linear-gradient(135deg, transparent, transparent 10px, color-mix(in srgb, var(--color-primary) 4%, transparent) 10px, color-mix(in srgb, var(--color-primary) 4%, transparent) 20px);
+      transition: all .2s
+    }
+
+    .upload-zone.drag-over {
+      border-color: var(--color-primary);
+      background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface-2))
+    }
+
+    .upload-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-4)
+    }
+
+    .upload-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3)
+    }
+
+    .chip {
+      padding: .45rem .75rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    /* Topics */
+    .topic-list {
+      display: grid;
+      gap: var(--space-3)
+    }
+
+    .topic-item {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: all var(--transition)
+    }
+
+    .topic-item:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-highlight)
+    }
+
+    .topic-item.active {
+      border-color: color-mix(in srgb, var(--color-primary) 50%, var(--color-border));
+      background: color-mix(in srgb, var(--color-primary-highlight) 60%, var(--color-surface-2))
+    }
+
+    .level-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-4)
+    }
+
+    .level-row button {
+      padding: .55rem .85rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      transition: all var(--transition)
+    }
+
+    .level-row button.sel {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary)
+    }
+
+    /* Explain */
+    .explain-box {
+      padding: var(--space-5);
+      border-radius: var(--radius-xl);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      display: grid;
+      gap: var(--space-4)
+    }
+
+    /* KPI + Progress bar */
+    .kpi {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-3)
+    }
+
+    .kpi strong {
+      font-size: 1.7rem;
+      font-variant-numeric: tabular-nums lining-nums
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: var(--color-surface-offset);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: var(--space-2)
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-blue));
+      transition: width .6s ease
+    }
+
+    .progress-row {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border)
+    }
+
+    /* Chat */
+    .chat-stream {
+      display: grid;
+      gap: var(--space-3)
+    }
+
+    .chat-bubble {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border)
+    }
+
+    .chat-bubble.user {
+      background: var(--color-primary-highlight);
+      border-color: transparent
+    }
+
+    .chat-input {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-4)
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: .95rem 1rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      outline: none;
+      transition: border-color .2s
+    }
+
+    .chat-input input:focus {
+      border-color: var(--color-primary)
+    }
+
+    /* Quiz */
+    .quiz-list {
+      display: grid;
+      gap: var(--space-3)
+    }
+
+    .quiz-item {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border)
+    }
+
+    .quiz-item h4 {
+      font-size: var(--text-base);
+      margin-bottom: var(--space-2)
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px
+    }
+
+    .quiz-opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: all .15s;
+      background: var(--color-surface-2)
+    }
+
+    .quiz-opt:hover:not(.done) {
+      border-color: var(--color-primary);
+      background: var(--color-primary-highlight)
+    }
+
+    .quiz-opt.sel {
+      border-color: var(--color-primary);
+      background: var(--color-primary-highlight)
+    }
+
+    .quiz-opt.ok {
+      border-color: var(--color-success) !important;
+      background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface-2)) !important
+    }
+
+    .quiz-opt.bad {
+      border-color: var(--color-error) !important;
+      background: color-mix(in srgb, var(--color-error) 10%, var(--color-surface-2)) !important
+    }
+
+    .opt-ltr {
+      min-width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    /* Prose */
+    .prose {
+      line-height: 1.75
+    }
+
+    .prose h3,
+    .prose h4 {
+      margin: 1em 0 .4em
+    }
+
+    .prose ul {
+      padding-left: 1.4em;
+      margin: .5em 0
+    }
+
+    .prose li {
+      margin: .25em 0
+    }
+
+    .prose strong {
+      font-weight: 700
+    }
+
+    .prose p {
+      margin: .5em 0
+    }
+
+    /* Spinner & cursor */
+    .spin {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: _spin .7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px
+    }
+
+    .spin-d {
+      border-color: rgba(1, 105, 111, .2);
+      border-top-color: var(--color-primary)
+    }
+
+    @keyframes _spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .cur {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--color-primary);
+      animation: _blink .8s infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      border-radius: 1px
+    }
+
+    @keyframes _blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
+    /* Pages */
+    .page {
+      display: none
+    }
+
+    .page.on {
+      display: block
+    }
+
+    /* Empty */
+    .empty {
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--color-text-muted)
+    }
+
+    .empty .ico {
+      font-size: 2.5rem;
+      margin-bottom: .75rem
+    }
+
+    /* Toast */
+    .toasts {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: grid;
+      gap: 8px;
+      z-index: 999;
+      pointer-events: none
+    }
+
+    .toast {
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      background: var(--color-text);
+      color: var(--color-bg);
+      font-size: var(--text-sm);
+      box-shadow: var(--shadow-md);
+      animation: _up .3s ease;
+      max-width: 300px;
+      pointer-events: all
+    }
+
+    @keyframes _up {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* Progress topic rows */
+    .pt-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-divider)
+    }
+
+    .pt-row:last-child {
+      border-bottom: none
+    }
+
+    /* Mobile */
+    .mob-toggle {
+      display: none
+    }
+
+    @media(max-width:1100px) {
+      .dashboard {
+        grid-template-columns: 88px 1fr
+      }
+
+      .sidebar .brand-copy,
+      .sidebar-card p,
+      .sidebar-card .primary-btn span,
+      .nav button span {
+        display: none
+      }
+
+      .nav button {
+        padding: .9rem;
+        display: grid;
+        place-items: center
+      }
+
+      .hero,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:768px) {
+
+      html,
+      body {
+        overflow: auto
+      }
+
+      .dashboard {
+        display: block;
+        height: auto
+      }
+
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(86vw, 310px);
+        transform: translateX(-100%);
+        transition: transform var(--transition);
+        z-index: 30;
+        box-shadow: var(--shadow-lg)
+      }
+
+      .sidebar.open {
+        transform: translateX(0)
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        padding: var(--space-4)
+      }
+
+      .main {
+        padding: var(--space-4)
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .searchbar {
+        display: none
+      }
+
+      .mob-toggle {
+        display: inline-flex;
+        padding: .75rem .95rem;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-surface)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M5 6.5 12 4l7 2.5-7 2.5L5 6.5Z" />
+            <path d="M5 10.5 12 13l7-2.5" />
+            <path d="M5 14.5 12 17l7-2.5" />
+            <path d="M12 9v8" />
+          </svg>
+        </div>
+        <div class="brand-copy">
+          <h1>Syllabus Slayer</h1>
+          <p class="muted">AI study workspace</p>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <span class="pill">AI Ready</span>
+        <p style="margin:12px 0 16px">Upload notes, slides, PDFs, docs, images, or text. Get lessons, tests, and
+          progress reports.</p>
+        <button class="primary-btn" onclick="go('uploads')"><span>New upload</span></button>
+      </div>
+
+      <nav class="nav">
+        <button data-p="dashboard" class="active" onclick="go('dashboard')">🏠 <span>Dashboard</span></button>
+        <button data-p="uploads" onclick="go('uploads')">📤 <span>Uploads</span></button>
+        <button data-p="topics" onclick="go('topics')">🧠 <span>Topics</span></button>
+        <button data-p="tests" onclick="go('tests')">📝 <span>Tests</span></button>
+        <button data-p="progress" onclick="go('progress')">📈 <span>Progress</span></button>
+        <button data-p="chat" onclick="go('chat')">💬 <span>AI Chat</span></button>
+      </nav>
+
+      <div class="sidebar-card">
+        <p class="muted" style="margin-bottom:10px">Student controls</p>
+        <div class="upload-meta">
+          <span class="chip" id="sc-lang">Language: English</span>
+          <span class="chip" id="sc-diff">Difficulty: Intermediate</span>
+          <span class="chip" id="sc-mode">Mode: Exam focused</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="mob-toggle" id="mobBtn">☰</button>
+        <div>
+          <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Learning
+            dashboard</p>
+          <h2 style="font-size:var(--text-lg);line-height:1.1" id="hdr-title">Student AI workspace</h2>
+        </div>
+      </div>
+      <label class="searchbar">
+        <span>🔎</span>
+        <input id="srch" type="text" placeholder="Search topics…" oninput="doSearch(this.value)" />
+      </label>
+      <div class="header-actions">
+        <button class="ghost-btn" onclick="exportReport()">Export report</button>
+        <button class="ghost-btn" id="auth-btn" onclick="S.token?logout():showAuthModal()">Sign in</button>
+        <button class="theme-toggle" data-theme-toggle>🌙</button>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div class="page on" id="pg-dashboard">
+        <section class="hero">
+          <div class="card hero-card">
+            <span class="pill">Upload to understand</span>
+            <h2>One place to learn from every file you bring.</h2>
+            <p>Upload PPT, PDF, DOC, images or plain text — AI extracts topics, explains them, generates tests, tracks
+              mastery.</p>
+            <div class="hero-grid">
+              <div class="stat"><span class="muted">Files uploaded</span><strong id="ds-files">0</strong><span
+                  class="faint">Total</span></div>
+              <div class="stat"><span class="muted">Topics studied</span><strong id="ds-studied">0</strong><span
+                  class="faint">Marked done</span></div>
+              <div class="stat"><span class="muted">Average score</span><strong id="ds-avg">—</strong><span
+                  class="faint">All tests</span></div>
+            </div>
+          </div>
+          <div class="panel-stack">
+            <div class="card">
+              <div class="section-head">
+                <div>
+                  <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Quick
+                    upload</p>
+                  <h3>Drop a file</h3>
+                </div>
+              </div>
+              <div class="upload-zone" id="dz-dash" ondragover="dzo(event,'dz-dash')" ondragleave="dzl('dz-dash')"
+                ondrop="dzd(event,'dz-dash')">
+                <p><strong>Drag files here</strong> or browse</p>
+                <p class="muted" style="margin-top:6px">PDF · PPT · DOC · TXT · Images</p>
+                <div class="upload-actions">
+                  <button class="primary-btn" onclick="document.getElementById('fi-dash').click()">Choose files</button>
+                  <button class="ghost-btn" onclick="go('uploads')">See all uploads</button>
+                </div>
+                <input id="fi-dash" type="file" multiple accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.png,.jpg,.jpeg"
+                  style="display:none" onchange="onFI(event)">
+                <div class="upload-meta" id="dm-dash"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-head">
+                <h3>Preferences</h3><span class="chip">Personalised</span>
+              </div>
+              <div class="upload-actions">
+                <select class="ghost-btn" id="pr-lang" onchange="syncP()">
+                  <option>English</option>
+                  <option>Hindi</option>
+                  <option>Gujarati</option>
+                </select>
+                <select class="ghost-btn" id="pr-diff" onchange="syncP()">
+                  <option>Beginner</option>
+                  <option selected>Intermediate</option>
+                  <option>Advanced</option>
+                </select>
+                <select class="ghost-btn" id="pr-mode" onchange="syncP()">
+                  <option>Detailed explanation</option>
+                  <option selected>Exam focused</option>
+                  <option>Short revision</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="grid-3">
+          <article class="card">
+            <div class="kpi">
+              <div>
+                <p class="muted">Tests taken</p><strong id="ds-tests">0</strong>
+              </div><span class="chip" id="ds-tests-chip">Start testing</span>
+            </div>
+            <div class="progress-bar"><span id="ds-tbar" style="width:0%"></span></div>
+            <p class="muted" style="margin-top:10px">Take tests to track improvement.</p>
+          </article>
+          <article class="card">
+            <div class="kpi">
+              <div>
+                <p class="muted">Topics extracted</p><strong id="ds-tcount">0</strong>
+              </div><span class="chip" id="ds-tcount-chip">Upload files</span>
+            </div>
+            <div class="progress-bar"><span id="ds-tcbar" style="width:0%"></span></div>
+            <p class="muted" style="margin-top:10px" id="ds-tdesc">Upload a file to get topics.</p>
+          </article>
+          <article class="card">
+            <div class="kpi">
+              <div>
+                <p class="muted">Best score</p><strong id="ds-best">—</strong>
+              </div><span class="chip">Personal best</span>
+            </div>
+            <div class="progress-bar"><span id="ds-bbar"
+                style="width:0%;background:linear-gradient(90deg,var(--color-success),var(--color-primary))"></span>
+            </div>
+            <p class="muted" style="margin-top:10px">Push for higher scores.</p>
+          </article>
+        </section>
+        <div class="grid-2">
+          <article class="card">
+            <div class="section-head">
+              <h3>Recent topics</h3><button class="small-btn" onclick="go('topics')">View all</button>
+            </div>
+            <div id="ds-topics">
+              <div class="empty">
+                <div class="ico">🧠</div>
+                <p>Upload files to extract topics</p>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="section-head">
+              <h3>Score history</h3><button class="small-btn" onclick="go('progress')">Full report</button>
+            </div>
+            <div id="ds-scores">
+              <div class="empty">
+                <div class="ico">📊</div>
+                <p>Take tests to see score history</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ══ UPLOADS ══ -->
+      <div class="page" id="pg-uploads">
+        <div class="grid-2" style="margin-bottom:var(--space-6)">
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Upload
+                  center</p>
+                <h3>Smart file intake</h3>
+              </div><span class="chip">AI-powered</span>
+            </div>
+            <div class="upload-zone" id="dz-up" ondragover="dzo(event,'dz-up')" ondragleave="dzl('dz-up')"
+              ondrop="dzd(event,'dz-up')">
+              <p><strong>Drag files here</strong> or browse from device.</p>
+              <p class="muted" style="margin-top:8px">Supports PDF, PPT/PPTX, DOC/DOCX, PNG, JPG, and raw text.</p>
+              <div class="upload-actions">
+                <button class="primary-btn" onclick="document.getElementById('fi-main').click()">Choose files</button>
+                <button class="ghost-btn" onclick="togglePaste()">Paste text</button>
+              </div>
+              <input id="fi-main" type="file" multiple accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.png,.jpg,.jpeg"
+                style="display:none" onchange="onFI(event)">
+              <div id="paste-area" style="display:none;margin-top:12px">
+                <textarea id="paste-txt" rows="5"
+                  style="width:100%;padding:10px;border-radius:var(--radius-lg);border:1px solid var(--color-border);background:var(--color-surface-2);resize:vertical;outline:none;font-family:inherit"
+                  placeholder="Paste your notes or article here…"></textarea>
+                <button class="primary-btn" style="margin-top:8px" onclick="addPaste()">Add as study material</button>
+              </div>
+              <div class="upload-meta" id="dm-up"></div>
+            </div>
+          </article>
+          <div class="panel-stack">
+            <article class="card">
+              <div class="section-head">
+                <h3>Preferences</h3><span class="chip">Personalised output</span>
+              </div>
+              <div class="upload-actions">
+                <select class="ghost-btn" id="pr-lang2" onchange="syncP2('lang',this.value)">
+                  <option>English</option>
+                  <option>Hindi</option>
+                  <option>Gujarati</option>
+                </select>
+                <select class="ghost-btn" id="pr-diff2" onchange="syncP2('diff',this.value)">
+                  <option>Beginner</option>
+                  <option selected>Intermediate</option>
+                  <option>Advanced</option>
+                </select>
+                <select class="ghost-btn" id="pr-mode2" onchange="syncP2('mode',this.value)">
+                  <option>Detailed explanation</option>
+                  <option selected>Exam focused</option>
+                  <option>Short revision</option>
+                </select>
+              </div>
+            </article>
+            <article class="card">
+              <div class="section-head">
+                <h3>Uploaded files</h3><span class="chip" id="fcount-chip">0 files</span>
+              </div>
+              <div id="file-list">
+                <p class="muted" style="font-size:var(--text-sm)">No files uploaded yet.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div style="text-align:center;margin-bottom:1rem">
+          <button class="primary-btn" id="ext-btn" onclick="extractTopics()"
+            style="min-width:230px;font-size:var(--text-base)">✨ Extract Topics &amp; Start Learning</button>
+        </div>
+        <div id="ext-status"></div>
+      </div>
+
+      <!-- ══ TOPICS ══ -->
+      <div class="page" id="pg-topics">
+        <div class="grid-2">
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Topic
+                  extraction</p>
+                <h3>Detected concepts</h3>
+              </div><button class="small-btn" onclick="go('tests')">Generate test</button>
+            </div>
+            <div class="topic-list" id="topic-panel">
+              <div class="empty">
+                <div class="ico">🧠</div>
+                <h3>No topics yet</h3>
+                <p>Upload files and click Extract Topics</p>
+              </div>
+            </div>
+            <div class="level-row">
+              <button class="sel" onclick="setDiff('Beginner',this)">Beginner</button>
+              <button onclick="setDiff('Intermediate',this)">Intermediate</button>
+              <button onclick="setDiff('Advanced',this)">Advanced</button>
+            </div>
+          </article>
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Topic
+                  explainer</p>
+                <h3>AI explanation panel</h3>
+              </div><span class="chip" id="exp-chip">Select a topic</span>
+            </div>
+            <div class="explain-box">
+              <div>
+                <p class="muted">Selected topic</p><strong style="font-size:var(--text-lg)" id="exp-name">—</strong>
+              </div>
+              <div id="exp-body" class="prose" style="min-height:100px;max-height:500px;overflow-y:auto;padding-right:10px;margin-bottom:15px;line-height:1.6">
+                <p class="muted">Click a topic on the left, then choose an explanation style below.</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap" id="exp-btns">
+                <button class="small-btn" onclick="explain('simple')">🧒 Simple</button>
+                <button class="small-btn" onclick="explain('detailed')">🎓 Detailed</button>
+                <button class="small-btn" onclick="explain('examples')">💡 Examples</button>
+                <button class="small-btn" onclick="explain('exam')">📋 Exam tips</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="primary-btn" id="mark-btn" onclick="markStudied()">+ Mark studied</button>
+              <button class="ghost-btn" onclick="go('tests')">Test on this →</button>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ══ TESTS ══ -->
+      <div class="page" id="pg-tests">
+        <div class="grid-2">
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Test
+                  engine</p>
+                <h3>AI generated assessment</h3>
+              </div><span class="chip" id="qz-chip">0 questions</span>
+            </div>
+            <div style="display:grid;gap:10px;margin-bottom:16px">
+              <div>
+                <label class="muted" style="font-size:var(--text-xs);display:block;margin-bottom:4px">Select
+                  topic</label>
+                <select class="ghost-btn" id="qz-topic" style="width:100%">
+                  <option value="all">All topics</option>
+                </select>
+              </div>
+              <div>
+                <label class="muted" style="font-size:var(--text-xs);display:block;margin-bottom:4px">Number of
+                  questions</label>
+                <select class="ghost-btn" id="qz-num" style="width:100%">
+                  <option value="3">3 questions (quick)</option>
+                  <option value="5" selected>5 questions</option>
+                  <option value="10">10 questions (full test)</option>
+                  <option value="50">50 questions (comprehensive)</option>
+                </select>
+              </div>
+              <button class="primary-btn" id="gen-btn" onclick="genQuiz()" style="width:100%">🧪 Generate Test</button>
+            </div>
+            <div class="quiz-list" id="qz-area"></div>
+            <div id="qz-result"></div>
+          </article>
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">Progress
+                  analytics</p>
+                <h3>Student progress report</h3>
+              </div><button class="small-btn" onclick="go('progress')">Full report</button>
+            </div>
+            <div style="display:grid;gap:12px">
+              <div class="progress-row">
+                <div class="kpi">
+                  <div><strong id="pa-avg">—</strong>
+                    <p class="muted">Average score</p>
+                  </div><span class="chip" id="pa-trend">No tests yet</span>
+                </div>
+              </div>
+              <div class="progress-row" id="pa-strong">
+                <p class="muted">Take a test to see strong and weak topics.</p>
+              </div>
+              <div class="progress-row" id="pa-weak" style="display:none"></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ══ PROGRESS ══ -->
+      <div class="page" id="pg-progress">
+        <div class="grid-3">
+          <article class="card">
+            <div class="kpi">
+              <div>
+                <p class="muted">Tests completed</p><strong id="pg-tc">0</strong>
+              </div>
+            </div>
+            <div class="progress-bar"><span id="pg-tcb" style="width:0%"></span></div>
+          </article>
+          <article class="card">
+            <div class="kpi">
+              <div>
+                <p class="muted">Average score</p><strong id="pg-av">—</strong>
+              </div>
+            </div>
+            <div class="progress-bar"><span id="pg-avb" style="width:0%"></span></div>
+          </article>
+          <article class="card">
+            <div class="kpi">
+              <div>
+                <p class="muted">Topics mastered</p><strong id="pg-ms">0</strong>
+              </div>
+            </div>
+            <div class="progress-bar"><span id="pg-msb" style="width:0%"></span></div>
+          </article>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="section-head">
+              <h3>Topic mastery</h3>
+            </div>
+            <div id="pg-mastery">
+              <div class="empty">
+                <div class="ico">📈</div>
+                <h3>No data yet</h3>
+                <p>Take tests to see your progress</p>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="section-head">
+              <h3>Score history</h3>
+            </div>
+            <div id="pg-hist">
+              <div class="empty">
+                <div class="ico">📊</div>
+                <h3>No tests taken</h3>
+                <p>Complete a test to see history</p>
+              </div>
+            </div>
+            <div id="pg-aifb" style="margin-top:12px"></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ══ CHAT ══ -->
+      <div class="page" id="pg-chat">
+        <article class="card" style="max-width:780px;margin:0 auto">
+          <div class="section-head">
+            <div>
+              <p class="muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em">AI tutor
+              </p>
+              <h3>Chat with your study material</h3>
+            </div><span class="chip">Context aware</span>
+          </div>
+          <div class="chat-stream" id="chat-msgs"
+            style="min-height:300px;max-height:480px;overflow-y:auto;padding-right:4px">
+            <div class="chat-bubble"><strong>AI tutor</strong>
+              <p class="muted">Hello! I'm your AI study tutor. Upload files and I'll help you understand any concept,
+                clarify doubts, or quiz you. Ask me anything!</p>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input id="chat-in" type="text" placeholder="Ask a question about your study material…"
+              onkeydown="if(event.key==='Enter')sendChat()" />
+            <button class="primary-btn" id="chat-btn" onclick="sendChat()">Send</button>
+          </div>
+        </article>
+      </div>
+
+    </main>
+  </div>
+  <div class="toasts" id="toasts"></div>
+
+  <script>
+    // ─── BACKEND CONFIG ────────────────────────────────────────────────────────────
+    const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
+    const API = 'http://localhost:8000';   // ← change to your deployed backend URL
+
+    // ─── STATE ────────────────────────────────────────────────────────────────────
+    const S = {
+      files: [],       // {id,name,original_name,type,size} from backend
+      topics: [],      // {id,name,description,studied} from backend
+      sel: null,       // selected topic id
+      diff: 'Intermediate',
+      lang: 'English',
+      mode: 'Exam focused',
+      quiz: [],
+      quizId: null,
+      ans: {},
+      done: false,
+      qTopic: 'all',
+      qTopicName: 'All topics',
+      topicScores: {}, // topic_name -> [%]
+      allScores: [],   // {score,date,name} local cache
+      chatHist: [],
+      ctx: '',
+      token: localStorage.getItem('ss_token') || null,
+      user: JSON.parse(localStorage.getItem('ss_user') || 'null'),
+    };
+
+    // ─── NAVIGATION ───────────────────────────────────────────────────────────────
+    const titles = { dashboard: 'Student AI workspace', uploads: 'Upload study material', topics: 'Topics & explanations', tests: 'Assessment engine', progress: 'Learning progress', chat: 'AI tutor chat' };
+    function go(p) {
+      document.querySelectorAll('.page').forEach(x => x.classList.remove('on'));
+      document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+      document.getElementById('pg-' + p)?.classList.add('on');
+      document.querySelector(`.nav button[data-p="${p}"]`)?.classList.add('active');
+      document.getElementById('hdr-title').textContent = titles[p] || p;
+      if (p === 'dashboard') updDash();
+      if (p === 'progress') { document.getElementById('pg-aifb').dataset.loaded = ''; loadProgress(); }
+      if (p === 'tests') updQzSel();
+    }
+
+    // ─── THEME ────────────────────────────────────────────────────────────────────
+    (() => {
+      const root = document.documentElement, t = document.querySelector('[data-theme-toggle]'),
+        sb = document.getElementById('sidebar'), mb = document.getElementById('mobBtn');
+      let th = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', th);
+      const paint = () => { t.textContent = th === 'dark' ? '☀️' : '🌙' }; paint();
+      t.addEventListener('click', () => { th = th === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', th); paint() });
+      mb.addEventListener('click', () => sb.classList.toggle('open'));
+      document.addEventListener('click', e => { if (window.innerWidth <= 768 && sb.classList.contains('open') && !sb.contains(e.target) && !mb.contains(e.target)) sb.classList.remove('open') });
+    })();
+
+    // ─── PREFS ────────────────────────────────────────────────────────────────────
+    function syncP() {
+      S.lang = document.getElementById('pr-lang').value;
+      S.diff = document.getElementById('pr-diff').value;
+      S.mode = document.getElementById('pr-mode').value;
+      paintPrefs();
+    }
+    function syncP2(k, v) {
+      if (k === 'lang') { S.lang = v; document.getElementById('pr-lang').value = v }
+      if (k === 'diff') { S.diff = v; document.getElementById('pr-diff').value = v }
+      if (k === 'mode') { S.mode = v; document.getElementById('pr-mode').value = v }
+      paintPrefs();
+    }
+    function paintPrefs() {
+      document.getElementById('sc-lang').textContent = 'Language: ' + S.lang;
+      document.getElementById('sc-diff').textContent = 'Difficulty: ' + S.diff;
+      document.getElementById('sc-mode').textContent = 'Mode: ' + S.mode;
+    }
+
+
+
+    // ─── AUTH UI ──────────────────────────────────────────────────────────────────
+    function showAuthModal(mode = 'login') {
+      const existing = document.getElementById('auth-modal');
+      if (existing) existing.remove();
+      const m = document.createElement('div');
+      m.id = 'auth-modal';
+      m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(4px)';
+      m.innerHTML = `
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:2rem;width:min(420px,92vw);box-shadow:var(--shadow-lg)">
+      <h2 style="margin-bottom:6px">Welcome to Syllabus Slayer</h2>
+      <p class="muted" style="margin-bottom:1.5rem;font-size:var(--text-sm)">Sign in to save your progress across sessions.</p>
+      <div id="auth-tabs" style="display:flex;gap:8px;margin-bottom:1.5rem">
+        <button id="tab-login" class="primary-btn" style="flex:1" onclick="switchTab('login')">Sign in</button>
+        <button id="tab-signup" class="ghost-btn" style="flex:1" onclick="switchTab('signup')">Sign up</button>
+      </div>
+      <div id="auth-name-wrap" style="display:none;margin-bottom:10px">
+        <input id="auth-name" type="text" placeholder="Your name" style="width:100%;padding:.85rem 1rem;border-radius:var(--radius-lg);border:1px solid var(--color-border);background:var(--color-surface-2);outline:none;font-family:inherit">
+      </div>
+      <div style="margin-bottom:10px">
+        <input id="auth-email" type="email" placeholder="Email address" style="width:100%;padding:.85rem 1rem;border-radius:var(--radius-lg);border:1px solid var(--color-border);background:var(--color-surface-2);outline:none;font-family:inherit">
+      </div>
+      <div style="margin-bottom:1.25rem">
+        <input id="auth-pass" type="password" placeholder="Password" style="width:100%;padding:.85rem 1rem;border-radius:var(--radius-lg);border:1px solid var(--color-border);background:var(--color-surface-2);outline:none;font-family:inherit" onkeydown="if(event.key==='Enter')doAuth()">
+      </div>
+      <div id="auth-err" style="color:var(--color-error);font-size:var(--text-sm);margin-bottom:10px;display:none"></div>
+      <button class="primary-btn" style="width:100%;margin-bottom:12px" onclick="doAuth()" id="auth-submit">Sign in</button>
+      <button class="ghost-btn" style="width:100%" onclick="skipAuth()">Continue without account</button>
+    </div>`;
+      document.body.appendChild(m);
+    }
+
+    let _authMode = 'login';
+    function switchTab(mode) {
+      _authMode = mode;
+      document.getElementById('auth-name-wrap').style.display = mode === 'signup' ? 'block' : 'none';
+      document.getElementById('auth-submit').textContent = mode === 'signup' ? 'Create account' : 'Sign in';
+      document.getElementById('tab-login').className = mode === 'login' ? 'primary-btn' : 'ghost-btn';
+      document.getElementById('tab-signup').className = mode === 'signup' ? 'primary-btn' : 'ghost-btn';
+    }
+
+    function skipAuth() {
+      document.getElementById('auth-modal')?.remove();
+      toast('Running in guest mode — progress not saved');
+    }
+
+    function parseError(data) {
+      if (typeof data === 'string') return data;
+      if (data.detail) {
+        if (typeof data.detail === 'string') return data.detail;
+        if (Array.isArray(data.detail)) {
+          const msgs = data.detail.map(e => e.msg || JSON.stringify(e)).join('; ');
+          return msgs || 'Validation error';
+        }
+        return JSON.stringify(data.detail);
+      }
+      if (Array.isArray(data)) {
+        const msgs = data.map(e => e.msg || (typeof e === 'string' ? e : JSON.stringify(e))).join('; ');
+        return msgs || 'Validation error';
+      }
+      return JSON.stringify(data);
+    }
+
+    async function doAuth() {
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-pass').value;
+      const errEl = document.getElementById('auth-err');
+      errEl.style.display = 'none';
+      if (!email || !pass) { errEl.textContent = 'Please fill all fields'; errEl.style.display = 'block'; return }
+      document.getElementById('auth-submit').disabled = true;
+      document.getElementById('auth-submit').innerHTML = '<span class="spin"></span> Please wait…';
+      try {
+        let body = { email, password: pass };
+        if (_authMode === 'signup') {
+          const name = document.getElementById('auth-name').value.trim();
+          if (!name) { errEl.textContent = 'Name is required'; errEl.style.display = 'block'; document.getElementById('auth-submit').disabled = false; document.getElementById('auth-submit').textContent = 'Create account'; return }
+          body.name = name;
+        }
+        const res = await fetch(`${API}/auth/${_authMode === 'signup' ? 'signup' : 'login'}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          const errMsg = parseError(data);
+          throw new Error(errMsg);
+        }
+        S.token = data.access_token;
+        S.user = data.user;
+        localStorage.setItem('ss_token', S.token);
+        localStorage.setItem('ss_user', JSON.stringify(S.user));
+        document.getElementById('auth-modal').remove();
+        toast(`Welcome${S.user.name ? ' ' + S.user.name : ''}! 🎉`);
+        await loadUserData();
+      } catch (e) {
+        errEl.textContent = e.message; errEl.style.display = 'block';
+        document.getElementById('auth-submit').disabled = false;
+        document.getElementById('auth-submit').textContent = _authMode === 'signup' ? 'Create account' : 'Sign in';
+      }
+    }
+
+    function logout() {
+      S.token = null; S.user = null; S.files = []; S.topics = []; S.allScores = []; S.topicScores = {}; S.quiz = []; S.chatHist = [];
+      localStorage.removeItem('ss_token'); localStorage.removeItem('ss_user');
+      renderFiles(); renderTopics(); updDash();
+      showAuthModal(); toast('Signed out');
+    }
+
+    // ─── API HELPER ────────────────────────────────────────────────────────────────
+    async function apiFetch(path, opts = {}) {
+      const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+      if (S.token) headers['Authorization'] = `Bearer ${S.token}`;
+      const res = await fetch(`${API}${path}`, { ...opts, headers });
+      if (res.status === 401) { showAuthModal(); throw new Error('Session expired — please sign in') }
+      return res;
+    }
+
+    // ─── LOAD USER DATA ON LOGIN ──────────────────────────────────────────────────
+    async function loadUserData() {
+      if (!S.token) return;
+      try {
+        const [fr, tr] = await Promise.all([
+          apiFetch('/files').then(r => r.json()),
+          apiFetch('/topics').then(r => r.json()),
+        ]);
+        S.files = fr.files || [];
+        S.topics = (tr.topics || []).map(t => ({ ...t, id: t.id }));
+        renderFiles(); renderTopics(); updQzSel(); updDash();
+      } catch (e) { console.warn('loadUserData:', e) }
+    }
+
+    // ─── FILES ────────────────────────────────────────────────────────────────────
+    function dzo(e, id) { e.preventDefault(); document.getElementById(id).classList.add('drag-over') }
+    function dzl(id) { document.getElementById(id).classList.remove('drag-over') }
+    function dzd(e, id) { e.preventDefault(); dzl(id); procFiles(e.dataTransfer.files) }
+    function onFI(e) { procFiles(e.target.files); e.target.value = '' }
+
+    async function procFiles(fl) {
+      if (!S.token) { toast('Please sign in to upload files', 'w'); showAuthModal(); return }
+      const icons = { pdf: '📄', pptx: '📊', ppt: '📊', docx: '📝', doc: '📝', txt: '📃', png: '🖼️', jpg: '🖼️', jpeg: '🖼️' };
+      const ext = n => n.split('.').pop().toLowerCase();
+      for (const f of fl) {
+        if (S.files.find(x => x.original_name === f.name)) { toast(`${f.name} already uploaded`, 'w'); continue }
+        const btn = document.getElementById('ext-btn');
+        toast(`Uploading ${f.name}…`);
+        try {
+          const fd = new FormData(); fd.append('file', f);
+          const res = await fetch(`${API}/upload`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${S.token}` },
+            body: fd
+          });
+          if (!res.ok) { const d = await res.json(); let errMsg = d.detail || 'Upload failed'; if (typeof errMsg !== 'string') errMsg = JSON.stringify(errMsg); throw new Error(errMsg) }
+          const data = await res.json();
+          S.files.push(data.file);
+          if (data.ocr_used) toast(`OCR used for ${f.name}`);
+        } catch (e) { toast(`Failed: ${e.message}`, 'w') }
+      }
+      renderFiles(); updDash();
+    }
+
+    function togglePaste() { const pa = document.getElementById('paste-area'); pa.style.display = pa.style.display === 'none' ? 'block' : 'none' }
+    async function addPaste() {
+      if (!S.token) { toast('Please sign in first', 'w'); showAuthModal(); return }
+      const txt = document.getElementById('paste-txt').value.trim();
+      if (!txt) return;
+      try {
+        const res = await apiFetch('/upload-text', { method: 'POST', body: JSON.stringify({ text: txt, name: 'Pasted notes' }) });
+        if (!res.ok) throw new Error('Upload failed');
+        const data = await res.json();
+        S.files.push(data.file);
+        document.getElementById('paste-txt').value = '';
+        document.getElementById('paste-area').style.display = 'none';
+        renderFiles(); updDash(); toast('Text added');
+      } catch (e) { toast(e.message, 'w') }
+    }
+
+    function renderFiles() {
+      const ext = n => (n || '').split('.').pop().toLowerCase();
+      const icons = { pdf: '📄', pptx: '📊', ppt: '📊', docx: '📝', doc: '📝', txt: '📃', png: '🖼️', jpg: '🖼️', jpeg: '🖼️' };
+      const fmtSz = b => !b ? '' : b < 1024 ? b + 'B' : b < 1048576 ? (b / 1024).toFixed(1) + 'KB' : (b / 1048576).toFixed(1) + 'MB';
+      const fname = f => f.original_name || f.name || 'file';
+      const dd = document.getElementById('dm-dash');
+      if (dd) dd.innerHTML = S.files.map(f => `<span class="chip">${icons[ext(fname(f))] || '📁'} ${fname(f)}</span>`).join('');
+      const ud = document.getElementById('dm-up');
+      if (ud) ud.innerHTML = S.files.map(f => `<span class="chip">${icons[ext(fname(f))] || '📁'} ${fname(f)}</span>`).join('');
+      const fl = document.getElementById('file-list');
+      if (fl) fl.innerHTML = S.files.length ? S.files.map((f) =>
+        `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-md);background:var(--color-surface-2);border:1px solid var(--color-border);margin-bottom:6px">
+      <span>${icons[ext(fname(f))] || '📁'}</span>
+      <span style="flex:1;font-size:var(--text-sm)">${fname(f)}</span>
+      <span class="faint" style="font-size:var(--text-xs)">${fmtSz(f.file_size || f.size)}</span>
+      <button onclick="rmFile('${f.id}')" style="color:var(--color-error);font-size:14px;padding:2px 6px">✕</button>
+    </div>`).join('') : '<p class="muted" style="font-size:var(--text-sm)">No files yet.</p>';
+      const fc = document.getElementById('fcount-chip');
+      if (fc) fc.textContent = S.files.length + ' file' + (S.files.length !== 1 ? 's' : '');
+    }
+
+    async function rmFile(id) {
+      try {
+        await apiFetch(`/files/${id}`, { method: 'DELETE' });
+        S.files = S.files.filter(f => f.id !== id);
+        S.topics = S.topics.filter(t => t.file_id !== id);
+        renderFiles(); renderTopics(); updDash(); toast('File removed');
+      } catch (e) { toast(e.message, 'w') }
+    }
+
+    // ─── BACKEND CHAT STREAM ───────────────────────────────────────────────────────
+    // Calls backend /chat SSE endpoint — streams tokens to onChunk callback
+    async function apiChat(msgs, onChunk) {
+      if (!S.token) throw new Error('Sign in to use AI features');
+      const res = await fetch(`${API}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${S.token}` },
+        body: JSON.stringify({ messages: msgs, language: S.lang, difficulty: S.diff })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        let errMsg = err.detail || `Chat error ${res.status}`;
+        if (typeof errMsg !== 'string') errMsg = JSON.stringify(errMsg);
+        throw new Error(errMsg);
+      }
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let full = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        for (const line of dec.decode(value).split('\n')) {
+          if (!line.startsWith('data:')) continue;
+          const d = line.slice(5).trim();
+          if (d === '[DONE]') continue;
+          try {
+            const j = JSON.parse(d);
+            if (j.token) { full += j.token; if (onChunk) onChunk(full); }
+            if (j.error) throw new Error(j.error);
+          } catch { }
+        }
+      }
+      return full;
+    }
+
+
+    // ─── EXTRACT TOPICS ───────────────────────────────────────────────────────────
+    async function extractTopics() {
+      if (!S.token) { toast('Please sign in first', 'w'); showAuthModal(); return }
+      if (!S.files.length) { toast('Upload at least one file first', 'w'); return }
+      const btn = document.getElementById('ext-btn'), st = document.getElementById('ext-status');
+      btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Extracting topics…';
+      st.innerHTML = '<div class="progress-row muted" style="padding:12px 16px">🤖 NLP is reading your files and identifying key concepts…</div>';
+      // Clear previous topics
+      await apiFetch('/topics', { method: 'DELETE' }).catch(() => { });
+      try {
+        const res = await apiFetch('/extract-topics', { method: 'POST', body: JSON.stringify({ max_topics: 10 }) });
+        if (!res.ok) { const d = await res.json(); let errMsg = d.detail || 'Failed to extract topics'; if (typeof errMsg !== 'string') errMsg = JSON.stringify(errMsg); throw new Error(errMsg) }
+        const data = await res.json();
+        S.topics = data.topics || [];
+        S.topics.forEach(t => { if (!S.topicScores[t.id]) S.topicScores[t.id] = [] });
+        renderTopics(); updQzSel(); updDash();
+        btn.innerHTML = '✨ Extract Topics & Start Learning'; btn.disabled = false;
+        st.innerHTML = `<div class="progress-row" style="border-color:var(--color-success);background:color-mix(in srgb,var(--color-success) 8%,var(--color-surface-2));padding:12px 16px">✅ Extracted <strong>${S.topics.length} topics</strong>. <a href="#" onclick="go('topics')" style="color:var(--color-primary)">Go to Topics →</a></div>`;
+        toast(S.topics.length + ' topics extracted!');
+      } catch (e) {
+        btn.innerHTML = '✨ Extract Topics & Start Learning'; btn.disabled = false;
+        st.innerHTML = `<div class="progress-row" style="padding:12px 16px;border-color:var(--color-error)">❌ ${e.message}</div>`;
+        toast(e.message, 'w');
+      }
+    }
+
+    // ─── TOPICS & EXPLAIN ─────────────────────────────────────────────────────────
+    function renderTopics() {
+      const p = document.getElementById('topic-panel');
+      if (!S.topics.length) { p.innerHTML = '<div class="empty"><div class="ico">🧠</div><h3>No topics yet</h3><p>Upload files and click Extract Topics</p></div>'; return }
+      p.innerHTML = S.topics.map(t => `<div class="topic-item ${t.studied ? '' : ''}${S.sel === t.id ? ' active' : ''}" onclick="selTopic('${t.id}')"><strong>${t.studied ? '✓ ' : ''} ${t.name}</strong><p class="muted">${t.description}</p></div>`).join('');
+    }
+
+    function selTopic(id) {
+      S.sel = id; const t = S.topics.find(x => x.id === id); if (!t) return;
+      document.getElementById('exp-name').textContent = t.name;
+      document.getElementById('exp-chip').textContent = S.diff;
+      document.getElementById('exp-body').innerHTML = '<p class="muted">Choose an explanation style below ↓</p>';
+      document.getElementById('mark-btn').textContent = t.studied ? '✓ Studied' : '+ Mark studied';
+      renderTopics();
+    }
+
+    function setDiff(lv, btn) {
+      S.diff = lv;
+      document.querySelectorAll('.level-row button').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      document.getElementById('exp-chip').textContent = lv;
+    }
+
+    async function explain(style) {
+      const t = S.topics.find(x => x.id === S.sel); if (!t) return;
+      const box = document.getElementById('exp-body');
+      box.innerHTML = '<span class="spin spin-d"></span> Generating…';
+      document.getElementById('exp-chip').textContent = { simple: 'Simple', detailed: 'Detailed', examples: 'Examples', exam: 'Exam tips' }[style];
+      const stylePrompts = {
+        simple: 'Explain this as if teaching a 10-year-old. Use very simple words, relatable analogies, and short bullet points.',
+        detailed: 'Give a comprehensive academic explanation with all subtopics, technical terms, and thorough coverage.',
+        examples: 'Explain through 3-5 concrete real-world examples. Make it memorable and practical.',
+        exam: 'Give exam-focused bullet points: key definitions, common exam questions, important facts to remember, and potential tricks.'
+      };
+      const prompt = `Topic: "${t.name}" — ${t.description}\n\n${stylePrompts[style]}\n\nDifficulty: ${S.diff}\nLanguage: ${S.lang}\n\nFormat with clear sections. Use **bold** for key terms, bullet points where helpful.`;
+      try {
+        await apiChat([{ role: 'user', content: prompt }],
+          text => { box.innerHTML = md2html(text) + '<span class="cur"></span>'; });
+        box.querySelectorAll('.cur').forEach(c => c.remove());
+      } catch (e) { box.innerHTML = '<p class="muted">Could not load explanation. ' + e.message + '</p>' }
+    }
+
+    async function markStudied() {
+      const t = S.topics.find(x => x.id === S.sel); if (!t) return;
+      t.studied = !t.studied;
+      document.getElementById('mark-btn').textContent = t.studied ? '✓ Studied' : '+ Mark studied';
+      renderTopics(); updDash();
+      toast(t.studied ? `"${t.name}" marked as studied` : `Unmarked "${t.name}"`);
+      if (S.token) {
+        try { await apiFetch(`/topics/${t.id}/studied`, { method: 'PATCH', body: JSON.stringify({ studied: t.studied }) }) }
+        catch (e) { console.warn('Could not persist studied state', e) }
+      }
+    }
+
+    // markdown → html (minimal)
+    function md2html(txt) {
+      return txt
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^#{1,3} (.+)$/gm, '<h4>$1</h4>')
+        .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*?<\/li>\n?)+/gs, s => `<ul style="padding-left:1.3em;margin:.4em 0">${s}</ul>`)
+        .replace(/\n\n+/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // ─── QUIZ ─────────────────────────────────────────────────────────────────────
+    function updQzSel() {
+      const s = document.getElementById('qz-topic'); if (!s) return;
+      s.innerHTML = '<option value="all">All topics</option>' + S.topics.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      if (S.sel) s.value = S.sel;
+    }
+
+    async function genQuiz() {
+      if (!S.token) { toast('Please sign in first', 'w'); showAuthModal(); return }
+      if (!S.topics.length) { toast('Extract topics first!', 'w'); return }
+      const topicId = document.getElementById('qz-topic').value;
+      const num = parseInt(document.getElementById('qz-num').value);
+      const btn = document.getElementById('gen-btn');
+      btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Generating…';
+      document.getElementById('qz-area').innerHTML = '';
+      document.getElementById('qz-result').innerHTML = '';
+      S.quiz = []; S.ans = {}; S.done = false; S.qTopic = topicId;
+      const selTopic = topicId === 'all' ? null : S.topics.find(x => x.id === topicId);
+      S.qTopicName = selTopic ? selTopic.name : 'All topics';
+      try {
+        const res = await apiFetch('/generate-quiz', {
+          method: 'POST', body: JSON.stringify({
+            topic_id: topicId === 'all' ? null : topicId,
+            topic_name: S.qTopicName,
+            num_questions: num
+          })
+        });
+        if (!res.ok) { const d = await res.json(); let errMsg = d.detail || 'Quiz generation failed'; if (typeof errMsg !== 'string') errMsg = JSON.stringify(errMsg); throw new Error(errMsg) }
+        const data = await res.json();
+        S.quizId = data.quiz_id;
+        // Normalise field names (backend uses 'answer', frontend expects 'correct')
+        S.quiz = (data.questions || []).map(q => ({ ...q, correct: q.answer ?? q.correct }));
+        document.getElementById('qz-chip').textContent = S.quiz.length + ' questions';
+        renderQuiz();
+      } catch (e) { document.getElementById('qz-area').innerHTML = `<p class="muted">Could not generate quiz: ${e.message}</p>` }
+      btn.disabled = false; btn.innerHTML = '🧪 Generate Test';
+    }
+
+    function renderQuiz() {
+      const area = document.getElementById('qz-area');
+      area.innerHTML = S.quiz.map((q, qi) => `
+    <div class="quiz-item">
+      <h4>${qi + 1}. ${q.question}</h4>
+      <div class="quiz-options">
+        ${q.options.map((opt, oi) => {
+        let cls = '';
+        const isCorr = Array.isArray(q.correct) ? q.correct.includes(oi) : oi === q.correct;
+        const isSel = Array.isArray(S.ans[qi]) ? S.ans[qi].includes(oi) : S.ans[qi] === oi;
+        if (S.done) { 
+          if (isCorr) cls = 'ok'; 
+          else if (isSel && !isCorr) cls = 'bad'; 
+        } else if (isSel) cls = 'sel';
+        
+        return `<div class="quiz-opt ${cls}${S.done ? ' done' : ''}" onclick="${S.done ? '' : 'selAns(' + qi + ',' + oi + ')'}">
+            <span class="opt-ltr">${'ABCD'[oi]}</span><span>${opt}</span>
+          </div>`;
+      }).join('')}
+      </div>
+      ${S.done && q.explanation ? `<div style="margin-top:8px;padding:8px 10px;border-radius:var(--radius-md);background:var(--color-primary-highlight);font-size:var(--text-xs);color:var(--color-primary)">💡 ${q.explanation}</div>` : ''}
+    </div>`).join('');
+
+      const ans = Object.values(S.ans).filter(a => Array.isArray(a) ? a.length > 0 : a !== undefined).length;
+      if (!S.done && S.quiz.length)
+        area.innerHTML += `<button class="primary-btn" style="width:100%;margin-top:8px" onclick="submitQz()" ${ans < S.quiz.length ? 'disabled' : ''}>Submit answers (${ans}/${S.quiz.length} answered)</button>`;
+    }
+
+    function selAns(qi, oi) { 
+      if (S.done) return; 
+      const q = S.quiz[qi];
+      if (Array.isArray(q.correct)) {
+        if (!Array.isArray(S.ans[qi])) S.ans[qi] = [];
+        const idx = S.ans[qi].indexOf(oi);
+        if (idx >= 0) S.ans[qi].splice(idx, 1);
+        else S.ans[qi].push(oi);
+      } else {
+        S.ans[qi] = oi; 
+      }
+      renderQuiz(); 
+    }
+
+    function submitQz() {
+      S.done = true;
+      let correct = 0;
+      S.quiz.forEach((q, i) => { 
+        if (Array.isArray(q.correct)) {
+          const ansArr = Array.isArray(S.ans[i]) ? S.ans[i] : [];
+          if (ansArr.length === q.correct.length && ansArr.every(v => q.correct.includes(v))) {
+             correct++;
+          }
+        } else {
+          if (S.ans[i] === q.correct) correct++;
+        }
+      });
+      const pct = Math.round(correct / S.quiz.length * 100);
+      const name = S.qTopicName || 'Test';
+      S.allScores.push({ score: pct, date: new Date().toLocaleDateString(), name });
+      if (S.qTopic !== 'all') { if (!S.topicScores[S.qTopic]) S.topicScores[S.qTopic] = []; S.topicScores[S.qTopic].push(pct) }
+      else S.topics.forEach(t => { if (!S.topicScores[t.id]) S.topicScores[t.id] = []; S.topicScores[t.id].push(pct) });
+      renderQuiz();
+      const g = pct >= 90 ? '🏆 Excellent!' : pct >= 70 ? '🌟 Great job!' : pct >= 50 ? '📚 Keep studying!' : '💪 Needs practice';
+      const col = pct >= 70 ? 'var(--color-success)' : pct >= 50 ? 'var(--color-warning)' : 'var(--color-error)';
+      document.getElementById('qz-result').innerHTML = `<div class="progress-row" style="text-align:center;padding:20px;border-color:${col};background:color-mix(in srgb,${col} 8%,var(--color-surface-2));margin-top:12px"><div style="font-size:2.4rem;font-weight:700;color:${col}">${pct}%</div><div style="font-size:1rem;margin:4px 0">${g}</div><div class="muted">${correct} of ${S.quiz.length} correct</div><button class="primary-btn" style="margin-top:12px" onclick="resetQz()">Try again</button></div>`;
+      updPA(); updDash(); toast('Test done: ' + pct + '%');
+      // Persist score to backend
+      if (S.token && S.quizId) {
+        apiFetch('/progress/score', {
+          method: 'POST', body: JSON.stringify({
+            quiz_id: S.quizId, topic_name: name, score: pct,
+            total_questions: S.quiz.length, correct
+          })
+        }).catch(e => console.warn('Score save failed', e));
+      }
+    }
+
+    function resetQz() { S.quiz = []; S.ans = {}; S.done = false; document.getElementById('qz-area').innerHTML = ''; document.getElementById('qz-result').innerHTML = ''; document.getElementById('qz-chip').textContent = '0 questions' }
+
+    function updPA() {
+      if (!S.allScores.length) return;
+      const scores = S.allScores.map(x => x.score);
+      const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+      const l2 = scores.slice(-2);
+      const trend = l2.length > 1 ? (l2[1] > l2[0] ? `+${l2[1] - l2[0]}% ↑` : `${l2[1] - l2[0]}% ↓`) : 'First test';
+      document.getElementById('pa-avg').textContent = avg + '%';
+      document.getElementById('pa-trend').textContent = trend;
+      const tavgs = S.topics.map(t => { const sc = S.topicScores[t.id] || []; return { name: t.name, avg: sc.length ? Math.round(sc.reduce((a, b) => a + b, 0) / sc.length) : null } }).filter(t => t.avg !== null).sort((a, b) => b.avg - a.avg);
+      const strong = tavgs.filter(t => t.avg >= 70).slice(0, 3);
+      const weak = tavgs.filter(t => t.avg < 70).slice(0, 3);
+      document.getElementById('pa-strong').innerHTML = strong.length ? `<strong>Strong:</strong> ${strong.map(t => `${t.name} (${t.avg}%)`).join(', ')}.` : '<p class="muted">Take more tests to identify strong topics.</p>';
+      const pw = document.getElementById('pa-weak');
+      if (weak.length) { pw.style.display = ''; pw.innerHTML = `<strong>Needs revision:</strong> ${weak.map(t => `${t.name} (${t.avg}%)`).join(', ')}.` } else pw.style.display = 'none';
+    }
+
+    // ─── PROGRESS ─────────────────────────────────────────────────────────────────
+    async function loadProgress() {
+      if (S.token) {
+        try {
+          const res = await apiFetch('/progress');
+          if (res.ok) {
+            const data = await res.json();
+            if (data.scores && data.scores.length) {
+              S.allScores = data.scores.map(s => ({
+                score: s.score,
+                name: s.topic_name,
+                date: new Date(s.taken_at).toLocaleDateString()
+              }));
+              // Rebuild topicScores lookup from topic_breakdown
+              S.topicScores = {};
+              for (const [tname, info] of Object.entries(data.topic_breakdown || {})) {
+                const t = S.topics.find(x => x.name === tname);
+                const key = t ? t.id : tname;
+                // Reconstruct an approximate array of scores
+                if (!S.topicScores[key]) S.topicScores[key] = [];
+                for (let i = 0; i < info.tests; i++)S.topicScores[key].push(info.average);
+              }
+            }
+          }
+        } catch (e) { console.warn('loadProgress:', e) }
+      }
+      renderProgress();
+    }
+
+    function renderProgress() {
+      const scores = S.allScores.map(x => x.score);
+      const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+      const mastered = S.topics.filter(t => t.studied).length;
+      document.getElementById('pg-tc').textContent = S.allScores.length;
+      document.getElementById('pg-tcb').style.width = Math.min(100, S.allScores.length * 10) + '%';
+      document.getElementById('pg-av').textContent = scores.length ? avg + '%' : '—';
+      document.getElementById('pg-avb').style.width = avg + '%';
+      document.getElementById('pg-ms').textContent = mastered;
+      document.getElementById('pg-msb').style.width = S.topics.length ? (mastered / S.topics.length * 100) + '%' : '0%';
+
+      const tm = document.getElementById('pg-mastery');
+      if (!S.topics.length) { tm.innerHTML = '<div class="empty"><div class="ico">📈</div><h3>No data yet</h3><p>Take tests to see your progress</p></div>' }
+      else {
+        tm.innerHTML = S.topics.map(t => {
+          const sc = S.topicScores[t.id] || []; const av = sc.length ? Math.round(sc.reduce((a, b) => a + b, 0) / sc.length) : 0;
+          const col = av >= 70 ? 'var(--color-success)' : av >= 50 ? 'var(--color-warning)' : 'var(--color-error)';
+          return `<div class="pt-row"><div style="flex:1"><strong style="font-size:var(--text-sm)">${t.name}</strong><p class="faint" style="font-size:var(--text-xs)">${sc.length} test${sc.length !== 1 ? 's' : ''}</p></div><div style="width:90px"><div class="progress-bar" style="margin:0"><span style="width:${av}%;background:${col}"></span></div></div><strong style="min-width:34px;text-align:right;font-size:var(--text-sm);color:${col}">${sc.length ? av + '%' : '—'}</strong></div>`;
+        }).join('')
+      }
+
+      const ph = document.getElementById('pg-hist');
+      if (!S.allScores.length) { ph.innerHTML = '<div class="empty"><div class="ico">📊</div><h3>No tests taken</h3><p>Complete a test to see history</p></div>' }
+      else {
+        ph.innerHTML = [...S.allScores].reverse().map((s, i) => {
+          const col = s.score >= 70 ? 'var(--color-success)' : s.score >= 50 ? 'var(--color-warning)' : 'var(--color-error)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--color-divider)"><span class="faint" style="font-size:var(--text-xs);min-width:20px">#${S.allScores.length - i}</span><div style="flex:1;font-size:var(--text-sm)">${s.name}</div><span class="faint" style="font-size:var(--text-xs)">${s.date}</span><strong style="color:${col}">${s.score}%</strong></div>`;
+        }).join('')
+      }
+
+      if (S.allScores.length >= 2) getAIFeedback();
+    }
+
+
+
+    async function getAIFeedback() {
+      if (!S.token) return;
+      const el = document.getElementById('pg-aifb'); if (!el || el.dataset.loaded === '1') return;
+      el.dataset.loaded = '1';
+      el.innerHTML = '<p class="muted" style="font-size:var(--text-sm)"><span class="spin spin-d"></span> AI analysing your progress…</p>';
+      const sum = `Tests: ${S.allScores.length}. Scores: ${S.allScores.map(s => s.score + '%').join(', ')}. Topics: ${S.topics.map(t => t.name).join(', ')}.`;
+      try {
+        await apiChat([{ role: 'user', content: `Student progress: ${sum}\nGive 2-3 short, specific, encouraging tips to improve. Be direct and actionable. Respond in ${S.lang}.` }],
+          text => { el.innerHTML = `<div class="progress-row"><strong>🤖 AI Feedback</strong><div class="prose" style="margin-top:8px;font-size:var(--text-sm)">${md2html(text)}<span class="cur"></span></div></div>` });
+        el.querySelectorAll('.cur').forEach(c => c.remove());
+      } catch (e) { el.innerHTML = ''; }
+    }
+
+    // ─── DASHBOARD ────────────────────────────────────────────────────────────────
+    function updDash() {
+      const scores = S.allScores.map(x => x.score);
+      const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+      const best = scores.length ? Math.max(...scores) : 0;
+      const studied = S.topics.filter(t => t.studied).length;
+      document.getElementById('ds-files').textContent = S.files.length;
+      document.getElementById('ds-studied').textContent = studied;
+      document.getElementById('ds-avg').textContent = scores.length ? avg + '%' : '—';
+      document.getElementById('ds-tests').textContent = S.allScores.length;
+      document.getElementById('ds-tests-chip').textContent = S.allScores.length ? avg + '% avg' : 'Start testing';
+      document.getElementById('ds-tbar').style.width = Math.min(100, S.allScores.length * 10) + '%';
+      document.getElementById('ds-tcount').textContent = S.topics.length;
+      document.getElementById('ds-tcount-chip').textContent = S.topics.length ? studied + '/' + S.topics.length + ' studied' : 'Upload files';
+      document.getElementById('ds-tcbar').style.width = S.topics.length ? (studied / S.topics.length * 100) + '%' : '0%';
+      document.getElementById('ds-tdesc').textContent = S.topics.length ? studied + ' of ' + S.topics.length + ' topics done.' : 'Upload a file to get topics.';
+      document.getElementById('ds-best').textContent = best ? best + '%' : '—';
+      document.getElementById('ds-bbar').style.width = best + '%';
+      const rt = document.getElementById('ds-topics');
+      if (S.topics.length) rt.innerHTML = S.topics.slice(0, 4).map(t => `<div class="topic-item ${t.studied ? '' : ''}${S.sel === t.id ? ' active' : ''}" onclick="go('topics');selTopic('${t.id}')"><strong>${t.studied ? '✓ ' : ''} ${t.name}</strong><p class="muted">${t.description}</p></div>`).join('');
+      const sh = document.getElementById('ds-scores');
+      if (S.allScores.length) {
+        sh.innerHTML = [...S.allScores].reverse().slice(0, 5).map(s => {
+          const col = s.score >= 70 ? 'var(--color-success)' : s.score >= 50 ? 'var(--color-warning)' : 'var(--color-error)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--color-divider)"><div style="flex:1;font-size:var(--text-sm)">${s.name}</div><strong style="color:${col}">${s.score}%</strong></div>`;
+        }).join('');
+      }
+    }
+
+    // ─── CHAT ─────────────────────────────────────────────────────────────────────
+    async function sendChat() {
+      if (!S.token) { toast('Please sign in to use AI chat', 'w'); showAuthModal(); return }
+      const inp = document.getElementById('chat-in'), msg = inp.value.trim(); if (!msg) return;
+      inp.value = ''; addBubble('user', msg);
+      S.chatHist.push({ role: 'user', content: msg });
+      const btn = document.getElementById('chat-btn'); btn.disabled = true; btn.textContent = '…';
+      const id = 'b-' + Date.now(); addBubble('ai', '…', id);
+      try {
+        const bubble = document.getElementById(id);
+        await apiChat(S.chatHist,
+          text => { if (bubble) bubble.querySelector('p').innerHTML = md2html(text) + '<span class="cur"></span>'; scrollChat() });
+        if (bubble) { bubble.querySelectorAll('.cur').forEach(c => c.remove()); S.chatHist.push({ role: 'assistant', content: bubble.querySelector('p').textContent || '' }); }
+        if (S.chatHist.length > 20) S.chatHist = S.chatHist.slice(-20);
+      } catch (e) { const b = document.getElementById(id); if (b) b.querySelector('p').textContent = e.message || 'Could not respond. Try again.' }
+      btn.disabled = false; btn.textContent = 'Send';
+    }
+    function addBubble(type, content, id) {
+      const msgs = document.getElementById('chat-msgs');
+      const d = document.createElement('div'); d.className = 'chat-bubble' + (type === 'user' ? ' user' : ''); if (id) d.id = id;
+      d.innerHTML = `<strong>${type === 'user' ? 'You' : 'AI tutor'}</strong><p>${type === 'user' ? content : '…'}</p>`;
+      msgs.appendChild(d); scrollChat();
+    }
+    function scrollChat() { const m = document.getElementById('chat-msgs'); m.scrollTop = m.scrollHeight }
+
+    // ─── EXPORT ───────────────────────────────────────────────────────────────────
+    function exportReport() {
+      const lines = ['Syllabus Slayer AI — Learning Report', '='.repeat(35), `Date: ${new Date().toLocaleDateString()}`, `Files: ${S.files.map(f => f.original_name || f.name).join(', ') || 'None'}`, `Topics: ${S.topics.map(t => t.name).join(', ') || 'None'}`, `Studied: ${S.topics.filter(t => t.studied).length}/${S.topics.length}`, '', 'Score History:', ...S.allScores.map((s, i) => `  #${i + 1} ${s.name}: ${s.score}% (${s.date})`), '', 'Topic Scores:', ...S.topics.map(t => { const sc = S.topicScores[t.id] || []; const av = sc.length ? Math.round(sc.reduce((a, b) => a + b, 0) / sc.length) : 0; return `  ${t.name}: ${sc.length ? av + '%' : 'Not tested'}` })].join('\n');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lines], { type: 'text/plain' })); a.download = 'syllabus-slayer-report.txt'; a.click();
+      toast('Report exported!');
+    }
+
+    // ─── TOAST ────────────────────────────────────────────────────────────────────
+    function toast(msg, type) {
+      const c = document.getElementById('toasts'), t = document.createElement('div');
+      t.className = 'toast'; t.textContent = (type === 'w' ? '⚠️ ' : '✅ ') + msg;
+      c.appendChild(t); setTimeout(() => t.remove(), 3000);
+    }
+
+    // ─── SEARCH ───────────────────────────────────────────────────────────────────
+    function doSearch(q) {
+      if (!q) return; const m = S.topics.find(t => t.name.toLowerCase().includes(q.toLowerCase()));
+      if (m) { go('topics'); selTopic(m.id) }
+    }
+
+    // ─── APP INIT ─────────────────────────────────────────────────────────────────
+    (async function init() {
+      // Update auth button label
+      function updAuthBtn() {
+        const btn = document.getElementById('auth-btn');
+        if (btn) btn.textContent = S.token ? (S.user?.name || 'Account') : 'Sign in';
+      }
+
+      if (S.token) {
+        // Validate token by pinging /files
+        try {
+          const r = await fetch(`${API}/files`, { headers: { Authorization: `Bearer ${S.token}` } });
+          if (r.status === 401) {
+            S.token = null; S.user = null;
+            localStorage.removeItem('ss_token'); localStorage.removeItem('ss_user');
+          } else {
+            await loadUserData();
+          }
+        } catch (e) {
+          console.warn('Backend unreachable — running in offline mode');
+          toast('Backend offline — running in guest mode', 'w');
+        }
+      } else {
+        // Show auth modal after a short delay so page renders first
+        setTimeout(() => showAuthModal(), 600);
+      }
+      updAuthBtn();
+      updDash();
+    })();
+  </script>
+</body>
+
+</html>

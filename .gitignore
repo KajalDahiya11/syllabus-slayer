@@ -1,0 +1,26 @@
+# Environment variables (contain secrets like API keys)
+.env
+backend/.env
+
+# Python Virtual Environments
+.venv/
+venv/
+backend/.venv/
+backend/venv/
+ENV/
+
+# Python Bytecode and Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Uploaded study materials (user files)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

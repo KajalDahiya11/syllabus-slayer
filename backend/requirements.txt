@@ -1,0 +1,41 @@
+# StudySage AI Backend — Python Dependencies
+# Install: pip install -r requirements.txt
+# Python 3.13+ compatible
+
+# ── Web framework ───────────────────────────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.20
+
+# ── Database ────────────────────────────────────────────────────────────────────
+motor==3.7.0
+pymongo==4.10.1
+
+# ── Auth & security ─────────────────────────────────────────────────────────────
+bcrypt==4.2.1
+python-jose[cryptography]==3.3.0
+
+# ── AI / LLM ────────────────────────────────────────────────────────────────────
+google-generativeai==0.8.6
+
+# ── File processing ─────────────────────────────────────────────────────────────
+pdfplumber==0.11.4
+PyMuPDF==1.25.3
+python-docx==1.1.2
+python-pptx==1.0.2
+Pillow==11.1.0
+
+# ── NLP (optional — falls back gracefully if not installed) ─────────────────────
+spacy==3.8.14              # run: python -m spacy download en_core_web_sm
+# transformers==4.47.1       # for HuggingFace summarisation
+# torch>=2.0.0               # CPU-only PyTorch needed by transformers
+
+# ── RAG / vector search (optional) ─────────────────────────────────────────────
+# sentence-transformers==3.3.1
+# faiss-cpu==1.9.0
+
+# ── Utilities ───────────────────────────────────────────────────────────────────
+numpy>=2.0.0
+python-dotenv==1.0.1
+email-validator>=2.0.0
+
