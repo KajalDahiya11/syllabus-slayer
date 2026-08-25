@@ -30,7 +30,9 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY", ""))
-CHAT_MODEL = os.getenv("CHAT_MODEL", "gemini-1.5-flash")
+_raw_model = os.getenv("CHAT_MODEL", "gemini-1.5-flash")
+CHAT_MODEL = "gemini-1.5-flash" if ("latest" in _raw_model or not _raw_model.startswith("gemini")) else _raw_model
+
 
 
 # ── Helper: get combined user text ─────────────────────────────────────────────
@@ -289,8 +291,9 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
 
     except Exception as e:
         logger.error("Chat stream error: %s", e, exc_info=True)
-        err = json.dumps({"error": "An error occurred. Please try again."})
+        err = json.dumps({"error": f"AI error: {str(e)}"})
         yield f"data: {err}\n\n"
+
 
 
 @router.post("/chat")
