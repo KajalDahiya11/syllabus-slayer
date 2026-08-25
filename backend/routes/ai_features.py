@@ -274,29 +274,48 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
             if not contents:
                 contents = last_user_msg or "Hello"
 
-        model = genai.GenerativeModel(
-            model_name=CHAT_MODEL,
-            system_instruction=system_prompt,
-        )
+        response = None
+        candidate_models = [CHAT_MODEL, "gemini-1.5-flash-latest", "gemini-2.0-flash-exp", "gemini-pro", "gemini-1.5-flash"]
+        # De-duplicate while preserving order
+        candidate_models = list(dict.fromkeys(candidate_models))
 
-        response = await model.generate_content_async(
-            contents,
-            generation_config=genai.GenerationConfig(
-                max_output_tokens=1024,
-                temperature=0.7,
-            ),
-            stream=True
-        )
-
-        async for chunk in response:
+        for m_name in candidate_models:
             try:
-                if chunk.text:
-                    payload = json.dumps({"token": chunk.text})
-                    yield f"data: {payload}\n\n"
-            except Exception:
-                continue
+                model = genai.GenerativeModel(
+                    model_name=m_name,
+                    system_instruction=system_prompt,
+                )
+                res = await model.generate_content_async(
+                    contents,
+                    generation_config=genai.GenerationConfig(
+                        max_output_tokens=1024,
+                        temperature=0.7,
+                    ),
+                    stream=True
+                )
+                # Test reading the first chunk to ensure model works
+                async for chunk in res:
+                    try:
+                        if chunk.text:
+                            payload = json.dumps({"token": chunk.text})
+                            yield f"data: {payload}\n\n"
+                    except Exception:
+                        continue
+                response = True
+                break
+            except Exception as ex:
+                err_str = str(ex).lower()
+                if "404" in err_str or "not found" in err_str or "not supported" in err_str:
+                    logger.warning("Gemini model %s 404 fallback: %s", m_name, ex)
+                    continue
+                else:
+                    raise ex
+
+        if not response:
+            raise RuntimeError("No compatible Gemini model found for this API key.")
 
         yield "data: [DONE]\n\n"
+
 
 
     except Exception as e:
