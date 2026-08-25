@@ -76,6 +76,11 @@ async def health():
     return {"status": "ok", "service": "Syllabus Slayer API", "version": "1.0.0"}
 
 
+@app.get("/version", tags=["Health"])
+async def get_version():
+    return {"version": "v2.0-flash-fix-check", "chat_model": "gemini-2.0-flash"}
+
+
 # ── Global error handler ───────────────────────────────────────────────────────
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
