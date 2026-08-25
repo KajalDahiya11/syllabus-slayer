@@ -277,11 +277,15 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
             stream=True
         )
         async for chunk in response:
-            if chunk.text:
-                payload = json.dumps({"token": chunk.text})
-                yield f"data: {payload}\n\n"
+            try:
+                if chunk.text:
+                    payload = json.dumps({"token": chunk.text})
+                    yield f"data: {payload}\n\n"
+            except Exception:
+                continue
 
         yield "data: [DONE]\n\n"
+
 
     except Exception as e:
         logger.error("Chat stream error: %s", e, exc_info=True)
