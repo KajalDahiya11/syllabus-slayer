@@ -319,6 +319,7 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
 
         response_started = False
         candidate_models = [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]
+        last_err = None
 
         for m_name in candidate_models:
             try:
@@ -340,13 +341,15 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
                 if response_started:
                     break
             except Exception as ex:
+                last_err = ex
                 logger.warning("Gemini model %s failed, trying fallback: %s", m_name, ex)
                 if response_started:
                     break
                 continue
 
         if not response_started:
-            raise RuntimeError("Could not connect to Gemini AI models. Please check your GOOGLE_API_KEY.")
+            err_msg = f"Could not connect to Gemini AI models ({str(last_err)}). Please verify GOOGLE_API_KEY in Render." if last_err else "Please check your GOOGLE_API_KEY."
+            raise RuntimeError(err_msg)
 
 
         yield "data: [DONE]\n\n"
