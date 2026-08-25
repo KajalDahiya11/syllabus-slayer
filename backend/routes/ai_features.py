@@ -45,6 +45,28 @@ DEFAULT_CANDIDATE_MODELS = [
     "gemini-pro",
 ]
 
+def get_active_candidate_models() -> list[str]:
+    api_key = os.getenv("GOOGLE_API_KEY", "").strip()
+    if api_key:
+        try:
+            genai.configure(api_key=api_key)
+            discovered = []
+            for m in genai.list_models():
+                if "generateContent" in getattr(m, "supported_generation_methods", []):
+                    name = m.name.replace("models/", "")
+                    discovered.append(name)
+            if discovered:
+                # Put preferred models first if present, followed by remaining flash models, then others
+                flash = [m for m in discovered if "flash" in m]
+                others = [m for m in discovered if "flash" not in m]
+                return flash + others
+        except Exception as err:
+            logger.warning("Dynamic model discovery failed: %s", err)
+    
+    _raw_model = os.getenv("CHAT_MODEL", "gemini-2.5-flash").strip()
+    preferred = _raw_model if _raw_model else "gemini-2.5-flash"
+    return [preferred] + [m for m in DEFAULT_CANDIDATE_MODELS if m != preferred]
+
 
 
 
@@ -131,7 +153,7 @@ async def summarize_route(
     else:
         try:
             summary = ""
-            for m_name in [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]:
+            for m_name in get_active_candidate_models():
                 try:
                     model = genai.GenerativeModel(m_name)
                     prompt = (
@@ -213,7 +235,7 @@ Ensure the response is purely the JSON array and NOTHING else. No markdown block
         if not os.getenv("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY") == "YOUR_GEMINI_API_KEY_HERE":
             questions = generate_quiz(text, topic_name, num_questions)
         else:
-            candidate_models = [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]
+            candidate_models = get_active_candidate_models()
             resp = None
             last_err = None
             for m_name in candidate_models:
@@ -320,7 +342,7 @@ async def _stream_sse(user_id: str, request: ChatRequest) -> AsyncGenerator[str,
             final_prompt = [{"role": "user", "parts": [system_prompt]}] + contents
 
         response_started = False
-        candidate_models = [CHAT_MODEL] + [m for m in DEFAULT_CANDIDATE_MODELS if m != CHAT_MODEL]
+        candidate_models = get_active_candidate_models()
         last_err = None
 
         for m_name in candidate_models:
