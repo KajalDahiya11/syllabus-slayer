@@ -1,4 +1,4 @@
-# StudySage — Production Backend
+# Syllabus Slayer — Production Backend
 
 > Full-stack AI learning platform. Upload PDFs, slides, docs and images → get topics, explanations, quizzes, and a RAG-powered study tutor.
 
